@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Car Information Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 p-4">
+  <div class="max-w-lg mx-auto bg-white p-8 rounded shadow-md">
+    <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Car Information Form</h1>
+
+    <form action="/" id="carForm" class="space-y-4" onsubmit="submitForm(); return false;">
+
+      <div class="flex flex-col">
+        <label for="accelerationTime" class="text-sm text-gray-600">Acceleration Time</label>
+        <input type="text" name="accelerationTime" id="accelerationTime"
+          placeholder="Enter Acceleration Time (float number)"
+          class="border rounded-md py-2 px-3 mt-1 focus:outline-none focus:ring focus:border-blue-300">
+      </div>
+
+      <div class="flex flex-col">
+        <label for="brand" class="text-sm text-gray-600">Brand</label>
+        <select name="brand" id="brand"
+          class="border rounded-md py-2 px-3 mt-1 focus:outline-none focus:ring focus:border-blue-300">
+          <option value="">Select brand</option>
+          <option value="Hyundai">Hyundai</option>
+          <option value="Volvo">Volvo</option>
+          <option value="DS">DS</option>
+          <option value="Honda">Honda</option>
+          <option value="Volkswagen">Volkswagen</option>
+          <option value="Dodge">Dodge</option>
+          <option value="Fiat">Fiat</option>
+          <option value="Ford">Ford</option>
+          <option value="Abarth">Abarth</option>
+          <option value="Ssangyong">Ssangyong</option>
+          <option value="Seat">Seat</option>
+          <option value="Porsche">Porsche</option>
+          <option value="Renault">Renault</option>
+          <option value="Skoda">Skoda</option>
+          <option value="Rover">Rover</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Saab">Saab</option>
+          <option value="Subaru">Subaru</option>
+          <option value="Suzuki">Suzuki</option>
+          <option value="MG">MG</option>
+          <option value="Mini">Mini</option>
+          <option value="Opel">Opel</option>
+          <option value="Mitsubishi">Mitsubishi</option>
+          <option value="Nissan">Nissan</option>
+          <option value="Peugeot">Peugeot</option>
+          <option value="Kia">Kia</option>
+          <option value="Lancia">Lancia</option>
+          <option value="Land Rover">Land Rover</option>
+          <option value="Mazda">Mazda</option>
+          <option value="Lexus">Lexus</option>
+          <option value="Mercedes-Benz">Mercedes-Benz</option>
+          <option value="Dacia">Dacia</option>
+          <option value="Daihatsu">Daihatsu</option>
+          <option value="BMW">BMW</option>
+          <option value="Cadillac">Cadillac</option>
+          <option value="Chevrolet">Chevrolet</option>
+          <option value="Chrysler">Chrysler</option>
+          <option value="Citroen">Citroen</option>
+          <option value="Jeep">Jeep</option>
+          <option value="Daewoo">Daewoo</option>
+          <option value="Audi">Audi</option>
+          <option value="Jaguar">Jaguar</option>
+          <option value="Alfa Romeo">Alfa Romeo</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col">
+        <label for="cargoVolume" class="text-sm text-gray-600">Cargo Volume</label>
+        <input type="text" name="cargoVolume" id="cargoVolume"
+          placeholder="Enter Cargo Volume (float number)"
+          class="border rounded-md py-2 px-3 mt-1 focus:outline-none focus:ring focus:border-blue-300">
+      </div>
+
+      <div class="flex flex-col">
+        <label for="curbWeight" class="text-sm text-gray-600">Curb Weight <span class="text-red-500 pl-1">*</span></label>
+        <input type="text" name="curbWeight" id="curbWeight" required
+          placeholder="Enter Curb Weight (float number)"
+          class="border rounded-md py-2 px-3 mt-1 focus:outline-none focus:ring focus:border-blue-300">
+      </div>
+      <div>
+        <button type="submit"
+          class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md text-white text-sm focus:outline-none">Submit</button>
+
+      </div>
+    </form>
+
+    <div class="results bg-white p-4 mt-6 rounded shadow-md">
+      <h2 class="text-xl font-bold mb-4 text-gray-800">Prediction Results:</h2>
+      <p class="text-gray-600">Linear Regression Prediction: <span class="text-blue-600" id="linearPred"></span></p>
+      <p class="text-gray-600">K-Nearest Neighbors Prediction: <span class="text-blue-600" id="knnPred"></span></p>
+      <p class="text-gray-600">Decision Tree Regression Prediction: <span class="text-blue-600" id="dtrPred"></span></p>
+    </div>
+
+  </div>
+<script>
+  function submitForm() {
+      var formData = new FormData(document.getElementById('carForm'));
+      var formDataObject = Object.fromEntries(formData);
+      
+      // Filter out empty values
+      Object.keys(formDataObject).forEach(key => {
+          if (formDataObject[key].trim() === "") {
+              delete formDataObject[key];
+          }
+      });
+      
+      console.log(formDataObject);
+      console.log(JSON.stringify(formDataObject));
+
+      fetch('/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formDataObject),
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Success:', data);
+          document.getElementById('linearPred').innerText = data.linear_pred;
+          document.getElementById('knnPred').innerText = data.knn_pred;
+          document.getElementById('dtrPred').innerText = data.dtr_pred;
+        })
+      .catch((error) => {
+          console.error('Error:', error);
+      });
+  }
+</script>
+
+</body>
+
+</html>
